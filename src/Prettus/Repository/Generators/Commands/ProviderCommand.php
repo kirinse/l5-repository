@@ -34,7 +34,7 @@ class ProviderCommand extends GeneratorCommand
      */
     protected function getStub()
     {
-        return __DIR__.'../Stubs/provider.stub';
+        return __DIR__.'/../Stubs/provider.stub';
     }
 
     /**

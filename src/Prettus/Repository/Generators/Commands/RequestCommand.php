@@ -34,7 +34,7 @@ class RequestCommand extends GeneratorCommand
      */
     protected function getStub()
     {
-        return __DIR__.'../Stubs/request.stub';
+        return __DIR__.'/../Stubs/request.stub';
     }
 
     /**
