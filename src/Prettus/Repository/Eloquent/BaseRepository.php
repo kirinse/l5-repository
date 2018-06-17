@@ -107,8 +107,6 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
         } else {
             $this->traceSpan = $tracing->getTracer()->nextSpan();
         }
-
-        $this->traceSpan->start();
     }
 
     /**
@@ -590,6 +588,7 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
 
             $this->validator->with($attributes)->passesOrFail(ValidatorInterface::RULE_CREATE);
         }
+        $this->traceSpan->start();
 
         $model = $this->model->newInstance($attributes);
         $model->save();
@@ -941,6 +940,7 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
             $this->model = $callback($this->model);
         }
 
+        $this->traceSpan->start();
         return $this;
     }
 
