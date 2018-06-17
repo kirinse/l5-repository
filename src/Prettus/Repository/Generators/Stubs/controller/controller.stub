@@ -37,6 +37,7 @@ class $CONTROLLER$Controller extends Controller
      */
     public function __construct($CLASS$Repository $repository, $CLASS$Validator $validator)
     {
+        parent::__construct();
         $this->repository = $repository;
         $this->validator  = $validator;
     }
@@ -46,12 +47,12 @@ class $CONTROLLER$Controller extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         $this->repository->pushCriteria(app('Prettus\Repository\Criteria\RequestCriteria'));
         $$PLURAL$ = $this->repository->all();
 
-        if (request()->wantsJson()) {
+        if ($request->expectsJson()) {
 
             return response()->json([
                 'data' => $$PLURAL$,
@@ -83,14 +84,14 @@ class $CONTROLLER$Controller extends Controller
                 'data'    => $$SINGULAR$->toArray(),
             ];
 
-            if ($request->wantsJson()) {
+            if ($request->expectsJson()) {
 
                 return response()->json($response);
             }
 
             return redirect()->back()->with('message', $response['message']);
         } catch (ValidatorException $e) {
-            if ($request->wantsJson()) {
+            if ($request->expectsJson()) {
                 return response()->json([
                     'error'   => true,
                     'message' => $e->getMessageBag()
@@ -108,11 +109,11 @@ class $CONTROLLER$Controller extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Request $request, $id)
     {
         $$SINGULAR$ = $this->repository->find($id);
 
-        if (request()->wantsJson()) {
+        if ($request->expectsJson()) {
 
             return response()->json([
                 'data' => $$SINGULAR$,
@@ -159,7 +160,7 @@ class $CONTROLLER$Controller extends Controller
                 'data'    => $$SINGULAR$->toArray(),
             ];
 
-            if ($request->wantsJson()) {
+            if ($request->expectsJson()) {
 
                 return response()->json($response);
             }
@@ -167,7 +168,7 @@ class $CONTROLLER$Controller extends Controller
             return redirect()->back()->with('message', $response['message']);
         } catch (ValidatorException $e) {
 
-            if ($request->wantsJson()) {
+            if ($request->expectsJson()) {
 
                 return response()->json([
                     'error'   => true,
@@ -187,11 +188,11 @@ class $CONTROLLER$Controller extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
         $deleted = $this->repository->delete($id);
 
-        if (request()->wantsJson()) {
+        if ($request->expectsJson()) {
 
             return response()->json([
                 'message' => '$CLASS$ deleted.',

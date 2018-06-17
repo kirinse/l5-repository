@@ -1,7 +1,7 @@
 <?php
 namespace Prettus\Repository\Generators\Commands;
 
-use File;
+use Illuminate\Support\Facades\File;
 use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
 use Prettus\Repository\Generators\BindingsGenerator;

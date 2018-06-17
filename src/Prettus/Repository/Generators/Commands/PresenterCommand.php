@@ -7,6 +7,7 @@ use Prettus\Repository\Generators\PresenterGenerator;
 use Prettus\Repository\Generators\TransformerGenerator;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
+use Illuminate\Support\Facades\File;
 
 /**
  * Class PresenterCommand
@@ -62,7 +63,7 @@ class PresenterCommand extends Command
             ]))->run();
             $this->info("Presenter created successfully.");
 
-            if (!\File::exists(app()->path() . '/Transformers/' . $this->argument('name') . 'Transformer.php')) {
+            if (!File::exists(app()->path() . '/Transformers/' . $this->argument('name') . 'Transformer.php')) {
                 if ($this->confirm('Would you like to create a Transformer? [y|N]')) {
                     (new TransformerGenerator([
                         'name'  => $this->argument('name'),

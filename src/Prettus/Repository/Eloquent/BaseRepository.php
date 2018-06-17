@@ -24,7 +24,6 @@ use Prettus\Validator\Exceptions\ValidatorException;
 /**
  * Class BaseRepository
  * @package Prettus\Repository\Eloquent
- * @author Anderson Andrade <contato@andersonandra.de>
  */
 abstract class BaseRepository implements RepositoryInterface, RepositoryCriteriaInterface
 {
@@ -84,8 +83,11 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
      */
     protected $scopeQuery = null;
 
+    protected $traceSpan;
+
     /**
      * @param Application $app
+     * @throws RepositoryException
      */
     public function __construct(Application $app)
     {
@@ -95,6 +97,18 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
         $this->makePresenter();
         $this->makeValidator();
         $this->boot();
+
+        $tracing = $this->app['Tracing'];
+        $tracer = $tracing->getTracer();
+        $rootSpan = $tracer->getCurrentSpan();
+
+        if ($rootSpan) {
+            $this->traceSpan = $tracer->newChild($rootSpan->getContext());
+        } else {
+            $this->traceSpan = $tracing->getTracer()->nextSpan();
+        }
+
+        $this->traceSpan->start();
     }
 
     /**
@@ -111,6 +125,8 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
     public function resetModel()
     {
         $this->makeModel();
+        $this->traceSpan->setName($this->traceName . ' Repository');
+        $this->traceSpan->finish();
     }
 
     /**
@@ -362,6 +378,9 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
 
         $results = $this->model->first($columns);
 
+        $this->traceSpan->setName('first: ' . $this->traceName);
+        $this->traceSpan->finish();
+
         $this->resetModel();
 
         return $this->parserResult($results);
@@ -384,6 +403,9 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
 
         $model = $this->model->firstOrNew($attributes);
         $this->skipPresenter($temporarySkipPresenter);
+
+        $this->traceSpan->setName('firstOrNew: ' . $this->traceName);
+        $this->traceSpan->finish();
 
         $this->resetModel();
 

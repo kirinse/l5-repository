@@ -27,7 +27,9 @@
     "illuminate/pagination": "~5.0",
     "illuminate/console": "~5.0",
     "illuminate/filesystem": "~5.0",
-    "prettus/laravel-validation": "1.1.*"
+    "prettus/laravel-validation": "1.1.*",
+    "joeldeval/lumen-form-request": "^2.4",
+    "league/fractal": "^0.17.0"
   },
   "autoload": {
     "psr-4": {
@@ -45,7 +47,7 @@
   "extra": {
     "laravel": {
       "providers": [
-        "Prettus\\Repository\\Providers\\RepositoryServiceProvider"
+        "Prettus\\Repository\\Providers\\LumenRepositoryServiceProvider"
       ]
     }
   },
