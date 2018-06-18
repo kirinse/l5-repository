@@ -2,8 +2,10 @@
 
 $NAMESPACE$
 
+use Prettus\Repository\Contracts\CacheableInterface;
 use Prettus\Repository\Eloquent\BaseRepository;
 use Prettus\Repository\Criteria\RequestCriteria;
+use Prettus\Repository\Traits\CacheableRepository;
 use $REPOSITORY$
 use $MODEL$;
 $USE_VALIDATOR$
@@ -13,8 +15,15 @@ $USE_VALIDATOR$
  *
  * @package $NAMESPACE$
  */
-class $CLASS$RepositoryEloquent extends BaseRepository implements $CLASS$Repository
+class $CLASS$RepositoryEloquent extends BaseRepository implements $CLASS$Repository, CacheableInterface
 {
+    use CacheableRepository;
+
+    /**
+     * @todo define $traceName
+     */
+    protected $traceName;
+
     /**
      * Specify Model class name
      *

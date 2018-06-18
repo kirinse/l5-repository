@@ -17,7 +17,7 @@ class $CLASS$ extends Model implements Transformable
 
     /**
      * The attributes that are mass assignable.
-     *
+     * @todo: define
      * @var array
      */
     protected $fillable = $FILLABLE$;

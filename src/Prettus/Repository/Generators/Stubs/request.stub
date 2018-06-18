@@ -9,6 +9,8 @@ class DummyClass extends FormRequest
     /**
      * Determine if the user is authorized to make this request.
      *
+     * @todo: check authorize
+     *
      * @return bool
      */
     public function authorize()

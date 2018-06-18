@@ -55,6 +55,7 @@ class $CONTROLLER$Controller extends Controller
         if ($request->expectsJson()) {
 
             return response()->json([
+                'stat' => 'ok',
                 'data' => $$PLURAL$,
             ]);
         }
@@ -80,6 +81,7 @@ class $CONTROLLER$Controller extends Controller
             $$SINGULAR$ = $this->repository->create($request->all());
 
             $response = [
+                'stat' => 'ok',
                 'message' => '$CLASS$ created.',
                 'data'    => $$SINGULAR$->toArray(),
             ];
@@ -93,8 +95,8 @@ class $CONTROLLER$Controller extends Controller
         } catch (ValidatorException $e) {
             if ($request->expectsJson()) {
                 return response()->json([
-                    'error'   => true,
-                    'message' => $e->getMessageBag()
+                    'stat'   => 'failed',
+                    'message' => $e->getMessageBag()->first(),
                 ]);
             }
 
@@ -116,6 +118,7 @@ class $CONTROLLER$Controller extends Controller
         if ($request->expectsJson()) {
 
             return response()->json([
+                'stat' => 'ok',
                 'data' => $$SINGULAR$,
             ]);
         }
@@ -156,6 +159,7 @@ class $CONTROLLER$Controller extends Controller
             $$SINGULAR$ = $this->repository->update($request->all(), $id);
 
             $response = [
+                'stat' => 'ok',
                 'message' => '$CLASS$ updated.',
                 'data'    => $$SINGULAR$->toArray(),
             ];
@@ -195,8 +199,9 @@ class $CONTROLLER$Controller extends Controller
         if ($request->expectsJson()) {
 
             return response()->json([
+                'stat' => 'ok',
                 'message' => '$CLASS$ deleted.',
-                'deleted' => $deleted,
+//                'deleted' => $deleted,
             ]);
         }
 
