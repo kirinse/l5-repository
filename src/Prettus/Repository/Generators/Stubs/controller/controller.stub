@@ -76,7 +76,7 @@ class $CONTROLLER$Controller extends Controller
     {
         try {
 
-            $this->validator->with($request->all())->passesOrFail(ValidatorInterface::RULE_CREATE);
+//            $this->validator->with($request->all())->passesOrFail(ValidatorInterface::RULE_CREATE);
 
             $$SINGULAR$ = $this->repository->create($request->all());
 
@@ -154,7 +154,7 @@ class $CONTROLLER$Controller extends Controller
     {
         try {
 
-            $this->validator->with($request->all())->passesOrFail(ValidatorInterface::RULE_UPDATE);
+//            $this->validator->with($request->all())->passesOrFail(ValidatorInterface::RULE_UPDATE);
 
             $$SINGULAR$ = $this->repository->update($request->all(), $id);
 
