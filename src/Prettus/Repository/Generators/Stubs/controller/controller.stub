@@ -175,7 +175,7 @@ class $CONTROLLER$Controller extends Controller
             if ($request->expectsJson()) {
 
                 return response()->json([
-                    'error'   => true,
+                    'stat'   => 'failed',
                     'message' => $e->getMessageBag()->first()
                 ], 422);
             }
