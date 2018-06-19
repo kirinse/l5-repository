@@ -376,9 +376,6 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
 
         $results = $this->model->first($columns);
 
-        $this->traceSpan->setName('first: ' . $this->traceName);
-        $this->traceSpan->finish();
-
         $this->resetModel();
 
         return $this->parserResult($results);
@@ -401,9 +398,6 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
 
         $model = $this->model->firstOrNew($attributes);
         $this->skipPresenter($temporarySkipPresenter);
-
-        $this->traceSpan->setName('firstOrNew: ' . $this->traceName);
-        $this->traceSpan->finish();
 
         $this->resetModel();
 
