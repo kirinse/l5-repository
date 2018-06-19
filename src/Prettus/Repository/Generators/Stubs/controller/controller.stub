@@ -97,7 +97,7 @@ class $CONTROLLER$Controller extends Controller
                 return response()->json([
                     'stat'   => 'failed',
                     'message' => $e->getMessageBag()->first(),
-                ]);
+                ], 422);
             }
 
             return redirect()->back()->withErrors($e->getMessageBag())->withInput();
@@ -176,8 +176,8 @@ class $CONTROLLER$Controller extends Controller
 
                 return response()->json([
                     'error'   => true,
-                    'message' => $e->getMessageBag()
-                ]);
+                    'message' => $e->getMessageBag()->first()
+                ], 422);
             }
 
             return redirect()->back()->withErrors($e->getMessageBag())->withInput();
