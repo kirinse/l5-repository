@@ -6,7 +6,7 @@ use Prettus\Repository\Contracts\CacheableInterface;
 use Prettus\Repository\Eloquent\BaseRepository;
 use Prettus\Repository\Criteria\RequestCriteria;
 use Prettus\Repository\Traits\CacheableRepository;
-use $REPOSITORY$
+//use $REPOSITORY$
 use $MODEL$;
 $USE_VALIDATOR$
 
@@ -19,10 +19,7 @@ class $CLASS$RepositoryEloquent extends BaseRepository implements $CLASS$Reposit
 {
     use CacheableRepository;
 
-    /**
-     * @todo define $traceName
-     */
-    protected $traceName;
+    protected $traceName = '$CLASS$';
 
     /**
      * Specify Model class name

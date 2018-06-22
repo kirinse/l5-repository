@@ -584,8 +584,9 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
         }
         $this->traceSpan->start();
 
-        $model = $this->model->newInstance($attributes);
-        $model->save();
+        $model = $this->model->create($attributes);
+//        $model = $this->model->newInstance($attributes);
+//        $model->save();
         $this->resetModel();
 
         event(new RepositoryEntityCreated($this, $model));
@@ -627,8 +628,9 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
         $this->skipPresenter(true);
 
         $model = $this->model->findOrFail($id);
-        $model->fill($attributes);
-        $model->save();
+        $model->update($attributes);
+//        $model->fill($attributes);
+//        $model->save();
 
         $this->skipPresenter($temporarySkipPresenter);
         $this->resetModel();
