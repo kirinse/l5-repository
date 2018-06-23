@@ -21,4 +21,8 @@ class $CLASS$Validator extends LaravelValidator
         ValidatorInterface::RULE_CREATE => $RULES$,
         ValidatorInterface::RULE_UPDATE => $RULES$,
     ];
+
+    protected $messages = [
+
+    ];
 }
