@@ -5,6 +5,7 @@ $NAMESPACE$
 use Illuminate\Http\Request;
 
 use $APPNAME$Http\Requests;
+use Illuminate\Support\Facades\Log;
 use Prettus\Validator\Contracts\ValidatorInterface;
 use Prettus\Validator\Exceptions\ValidatorException;
 use $APPNAME$Http\Requests\$CLASS$CreateRequest;
@@ -51,16 +52,10 @@ class $CONTROLLER$Controller extends Controller
     {
         $this->repository->pushCriteria(app('Prettus\Repository\Criteria\RequestCriteria'));
         $$PLURAL$ = $this->repository->all();
-
-        if ($request->expectsJson()) {
-
-            return response()->json([
-                'stat' => 'ok',
-                'data' => $$PLURAL$,
-            ]);
-        }
-
-        return view('$PLURAL$.index', compact('$PLURAL$'));
+        return response()->json([
+            'stat' => 'ok',
+            'data' => $$PLURAL$,
+        ]);
     }
 
     /**
@@ -76,7 +71,7 @@ class $CONTROLLER$Controller extends Controller
     {
         try {
 
-//            $this->validator->with($request->all())->passesOrFail(ValidatorInterface::RULE_CREATE);
+            $this->validator->with($request->all())->passesOrFail(ValidatorInterface::RULE_CREATE);
 
             $$SINGULAR$ = $this->repository->create($request->all());
 
@@ -85,22 +80,15 @@ class $CONTROLLER$Controller extends Controller
                 'message' => '$CLASS$ created.',
                 'data'    => $$SINGULAR$->toArray(),
             ];
-
-            if ($request->expectsJson()) {
-
-                return response()->json($response);
-            }
-
-            return redirect()->back()->with('message', $response['message']);
+            return response()->json($response);
         } catch (ValidatorException $e) {
-            if ($request->expectsJson()) {
-                return response()->json([
-                    'stat'   => 'failed',
-                    'message' => $e->getMessageBag()->first(),
-                ], 422);
-            }
-
-            return redirect()->back()->withErrors($e->getMessageBag())->withInput();
+            return response()->json([
+                'stat'   => 'failed',
+                'message' => $e->getMessageBag()->first(),
+            ], 422);
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
+            return response()->json(['stat' => 'failed', 'message' => strtoupper(env('APP_NAME')) . '_SERVER_ERROR'], 500);
         }
     }
 
@@ -114,16 +102,10 @@ class $CONTROLLER$Controller extends Controller
     public function show(Request $request, $id)
     {
         $$SINGULAR$ = $this->repository->find($id);
-
-        if ($request->expectsJson()) {
-
-            return response()->json([
-                'stat' => 'ok',
-                'data' => $$SINGULAR$,
-            ]);
-        }
-
-        return view('$PLURAL$.show', compact('$SINGULAR$'));
+        return response()->json([
+            'stat' => 'ok',
+            'data' => $$SINGULAR$,
+        ]);
     }
 
     /**
@@ -154,33 +136,23 @@ class $CONTROLLER$Controller extends Controller
     {
         try {
 
-//            $this->validator->with($request->all())->passesOrFail(ValidatorInterface::RULE_UPDATE);
+            $this->validator->with($request->all())->passesOrFail(ValidatorInterface::RULE_UPDATE);
 
             $$SINGULAR$ = $this->repository->update($request->all(), $id);
 
             $response = [
                 'stat' => 'ok',
                 'message' => '$CLASS$ updated.',
-                'data'    => $$SINGULAR$->toArray(),
             ];
-
-            if ($request->expectsJson()) {
-
-                return response()->json($response);
-            }
-
-            return redirect()->back()->with('message', $response['message']);
+            return response()->json($response);
         } catch (ValidatorException $e) {
-
-            if ($request->expectsJson()) {
-
-                return response()->json([
-                    'stat'   => 'failed',
-                    'message' => $e->getMessageBag()->first()
-                ], 422);
-            }
-
-            return redirect()->back()->withErrors($e->getMessageBag())->withInput();
+            return response()->json([
+                'stat'   => 'failed',
+                'message' => $e->getMessageBag()->first()
+            ], 422);
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
+            return response()->json(['stat' => 'failed', 'message' => strtoupper(env('APP_NAME')) . '_SERVER_ERROR'], 500);
         }
     }
 
@@ -194,17 +166,11 @@ class $CONTROLLER$Controller extends Controller
      */
     public function destroy(Request $request, $id)
     {
-        $deleted = $this->repository->delete($id);
+        $this->repository->delete($id);
 
-        if ($request->expectsJson()) {
-
-            return response()->json([
-                'stat' => 'ok',
-                'message' => '$CLASS$ deleted.',
-//                'deleted' => $deleted,
-            ]);
-        }
-
-        return redirect()->back()->with('message', '$CLASS$ deleted.');
+        return response()->json([
+            'stat' => 'ok',
+            'message' => '$CLASS$ deleted.',
+        ]);
     }
 }
