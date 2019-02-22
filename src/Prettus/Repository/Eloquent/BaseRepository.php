@@ -83,8 +83,6 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
      */
     protected $scopeQuery = null;
 
-    protected $traceSpan;
-
     /**
      * @param Application $app
      * @throws RepositoryException
@@ -97,16 +95,6 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
         $this->makePresenter();
         $this->makeValidator();
         $this->boot();
-
-        $tracing = $this->app['Tracing'];
-        $tracer = $tracing->getTracer();
-        $rootSpan = $tracer->getCurrentSpan();
-
-        if ($rootSpan) {
-            $this->traceSpan = $tracer->newChild($rootSpan->getContext());
-        } else {
-            $this->traceSpan = $tracing->getTracer()->nextSpan();
-        }
     }
 
     /**
@@ -123,8 +111,6 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
     public function resetModel()
     {
         $this->makeModel();
-        $this->traceSpan->setName($this->traceName . ' Repository');
-        $this->traceSpan->finish();
     }
 
     /**
@@ -368,6 +354,7 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
      * @param array $columns
      *
      * @return mixed
+     * @throws RepositoryException
      */
     public function first($columns = ['*'])
     {
@@ -387,6 +374,7 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
      * @param array $attributes
      *
      * @return mixed
+     * @throws RepositoryException
      */
     public function firstOrNew(array $attributes = [])
     {
@@ -410,6 +398,7 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
      * @param array $attributes
      *
      * @return mixed
+     * @throws RepositoryException
      */
     public function firstOrCreate(array $attributes = [])
     {
@@ -561,6 +550,7 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
      * Save a new entity in repository
      *
      * @throws ValidatorException
+     * @throws RepositoryException
      *
      * @param array $attributes
      *
@@ -582,7 +572,6 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
 
             $this->validator->with($attributes)->passesOrFail(ValidatorInterface::RULE_CREATE);
         }
-        $this->traceSpan->start();
 
         $model = $this->model->create($attributes);
 //        $model = $this->model->newInstance($attributes);
@@ -598,6 +587,7 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
      * Update a entity in repository by id
      *
      * @throws ValidatorException
+     * @throws RepositoryException
      *
      * @param array $attributes
      * @param       $id
@@ -936,7 +926,6 @@ abstract class BaseRepository implements RepositoryInterface, RepositoryCriteria
             $this->model = $callback($this->model);
         }
 
-        $this->traceSpan->start();
         return $this;
     }
 

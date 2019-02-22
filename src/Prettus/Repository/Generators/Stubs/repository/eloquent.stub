@@ -19,8 +19,6 @@ class $CLASS$RepositoryEloquent extends BaseRepository implements $CLASS$Reposit
 {
     use CacheableRepository;
 
-    protected $traceName = '$CLASS$';
-
     /**
      * Specify Model class name
      *
